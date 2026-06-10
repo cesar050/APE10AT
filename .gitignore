@@ -1,0 +1,23 @@
+# Backend - Maven
+backend/dialogforge-backend/target/
+backend/dialogforge-backend/*.class
+backend/dialogforge-backend/*.jar
+
+# Archivos generados por JFlex y CUP
+backend/dialogforge-backend/src/main/java/com/dialogforge/parser/DialogLexer.java
+backend/dialogforge-backend/src/main/java/com/dialogforge/parser/DialogParser.java
+backend/dialogforge-backend/src/main/java/com/dialogforge/parser/DialogSymbols.java
+
+# Frontend - Node
+frontend/dialogforge-frontend/node_modules/
+frontend/dialogforge-frontend/dist/
+frontend/dialogforge-frontend/.vite/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db

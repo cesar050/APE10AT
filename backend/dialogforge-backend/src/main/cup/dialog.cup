@@ -1,0 +1,59 @@
+package com.dialogforge.parser;
+
+import java_cup.runtime.*;
+
+parser code {:
+    public void report_error(String message, Object info) {
+        StringBuilder sb = new StringBuilder("Error sintáctico");
+        if (info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            sb.append(" en línea ").append(s.left + 1);
+            sb.append(", columna ").append(s.right + 1);
+        }
+        sb.append(": ").append(message);
+        throw new RuntimeException(sb.toString());
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+    }
+:}
+
+/* Terminales */
+terminal SAY, IF, THEN, ELSE, GIVE, AND, PLAYER_HAS, SEMICOLON;
+terminal String STRING_LITERAL;
+
+/* No Terminales */
+non terminal dialogo;
+non terminal sentencia;
+non terminal condicion;
+non terminal consecuencia;
+non terminal accion_simple;
+
+/* Símbolo inicial */
+start with dialogo;
+
+/* P1 y P2 */
+dialogo ::= sentencia
+          | sentencia SEMICOLON dialogo
+          ;
+
+/* P3 y P4 y P5 */
+sentencia ::= SAY STRING_LITERAL
+            | GIVE STRING_LITERAL
+            | IF condicion THEN consecuencia ELSE consecuencia
+            ;
+
+/* P6 */
+condicion ::= PLAYER_HAS STRING_LITERAL
+            ;
+
+/* accion_simple: solo SAY o GIVE, sin IF anidado */
+accion_simple ::= SAY STRING_LITERAL
+                | GIVE STRING_LITERAL
+                ;
+
+/* P7 y P8 */
+consecuencia ::= accion_simple
+               | consecuencia AND accion_simple
+               ;

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dialogforge</groupId>
+    <artifactId>dialogforge-backend</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Boot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- JFlex -->
+        <dependency>
+            <groupId>de.jflex</groupId>
+            <artifactId>jflex</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+
+        <!-- CUP -->
+        <dependency>
+            <groupId>com.github.vbmacher</groupId>
+            <artifactId>java-cup</artifactId>
+            <version>11b-20160615</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.vbmacher</groupId>
+            <artifactId>java-cup-runtime</artifactId>
+            <version>11b-20160615</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+<build>
+    <plugins>
+        <!-- Spring Boot -->
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+
+        <!-- JFlex: genera el Lexer desde dialog.flex -->
+        <plugin>
+            <groupId>de.jflex</groupId>
+            <artifactId>jflex-maven-plugin</artifactId>
+            <version>1.9.1</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                </execution>
+            </executions>
+<configuration>
+    <lexDefinitions>
+        <lexDefinition>src/main/jflex/dialog.flex</lexDefinition>
+    </lexDefinitions>
+    <outputDirectory>src/main/java</outputDirectory>
+</configuration>
+        </plugin>
+
+        <!-- CUP: genera el Parser desde dialog.cup -->
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>cup-generate</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                    <configuration>
+                        <mainClass>java_cup.Main</mainClass>
+                        <arguments>
+                            <argument>-parser</argument>
+                            <argument>DialogParser</argument>
+                            <argument>-symbols</argument>
+                            <argument>DialogSymbols</argument>
+                            <argument>-package</argument>
+                            <argument>com.dialogforge.parser</argument>
+                            <argument>-destdir</argument>
+                            <argument>src/main/java/com/dialogforge/parser</argument>
+                            <argument>src/main/cup/dialog.cup</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+</project>
