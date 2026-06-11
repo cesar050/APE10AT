@@ -6,26 +6,26 @@
     />
 
     <main class="main-grid">
-      <ScriptEditor
-        v-model="script"
-        :cargando="cargando"
-        @analizar="analizar"
-        @limpiar="limpiar"
-      />
-
-      <section class="panel-right">
+      <!-- Columna izquierda -->
+      <section class="col-left">
+        <ScriptEditor
+          v-model="script"
+          :cargando="cargando"
+          @analizar="analizar"
+          @limpiar="limpiar"
+        />
         <ResultPanel
           :analizado="analizado"
           :valido="respuesta.valido"
           :mensaje="respuesta.mensaje"
         />
-        <TokenNavigator
-          :tokens="tokens"
-          :tokenIndex="tokenIndex"
-          @anterior="tokenAnterior"
-          @siguiente="tokenSiguiente"
-        />
       </section>
+
+      <!-- Columna central -->
+      <TokenNavigator :tokens="tokens" />
+
+      <!-- Columna derecha -->
+      <TreeView :arbol="respuesta.arbol" />
     </main>
   </div>
 </template>
@@ -36,18 +36,18 @@ import AppHeader from './components/AppHeader.vue'
 import ScriptEditor from './components/ScriptEditor.vue'
 import ResultPanel from './components/ResultPanel.vue'
 import TokenNavigator from './components/TokenNavigator.vue'
+import TreeView from './components/TreeView.vue'
 
 export default {
   name: 'App',
-  components: { AppHeader, ScriptEditor, ResultPanel, TokenNavigator },
+  components: { AppHeader, ScriptEditor, ResultPanel, TokenNavigator, TreeView },
   data() {
     return {
       script: '',
       cargando: false,
       analizado: false,
-      respuesta: { valido: false, mensaje: '' },
-      tokens: [],
-      tokenIndex: 0
+      respuesta: { valido: false, mensaje: '', arbol: null },
+      tokens: []
     }
   },
   methods: {
@@ -56,7 +56,7 @@ export default {
       this.cargando = true
       this.analizado = false
       this.tokens = []
-      this.tokenIndex = 0
+      this.respuesta = { valido: false, mensaje: '', arbol: null }
       try {
         const res = await axios.post('http://localhost:8080/api/dialog/analizar', {
           script: this.script
@@ -67,7 +67,7 @@ export default {
           this.extraerTokens()
         }
       } catch (e) {
-        this.respuesta = { valido: false, mensaje: 'Error al conectar con el servidor' }
+        this.respuesta = { valido: false, mensaje: 'Error al conectar con el servidor', arbol: null }
         this.analizado = true
       } finally {
         this.cargando = false
@@ -76,32 +76,26 @@ export default {
     extraerTokens() {
       const keywords = ['SAY', 'IF', 'THEN', 'ELSE', 'GIVE', 'AND', 'PLAYER_HAS']
       const tokens = []
-      const regex = /"[^"]*"|;|[A-Z_]+/g
+      const regex = /"[^"]*"|;|[A-Za-z_]+/g
       let match
       while ((match = regex.exec(this.script)) !== null) {
         const val = match[0]
+        const valUpper = val.toUpperCase()
         if (val === ';') {
           tokens.push({ tipo: 'SEMICOLON', valor: ';' })
         } else if (val.startsWith('"')) {
           tokens.push({ tipo: 'STRING_LITERAL', valor: val })
-        } else if (keywords.includes(val)) {
-          tokens.push({ tipo: val, valor: val })
+        } else if (keywords.includes(valUpper)) {
+          tokens.push({ tipo: valUpper, valor: val })
         }
       }
       this.tokens = tokens
-    },
-    tokenAnterior() {
-      if (this.tokenIndex > 0) this.tokenIndex--
-    },
-    tokenSiguiente() {
-      if (this.tokenIndex < this.tokens.length - 1) this.tokenIndex++
     },
     limpiar() {
       this.script = ''
       this.analizado = false
       this.tokens = []
-      this.tokenIndex = 0
-      this.respuesta = { valido: false, mensaje: '' }
+      this.respuesta = { valido: false, mensaje: '', arbol: null }
     }
   }
 }
@@ -118,11 +112,11 @@ export default {
 .main-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
   min-height: 0;
 }
-.panel-right {
+.col-left {
   display: flex;
   flex-direction: column;
   gap: 12px;

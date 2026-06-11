@@ -3,6 +3,8 @@ package com.dialogforge.parser;
 import java_cup.runtime.*;
 
 parser code {:
+    public NodoArbol arbol = null;
+
     public void report_error(String message, Object info) {
         StringBuilder sb = new StringBuilder("Error sintáctico");
         if (info instanceof Symbol) {
@@ -24,36 +26,82 @@ terminal SAY, IF, THEN, ELSE, GIVE, AND, PLAYER_HAS, SEMICOLON;
 terminal String STRING_LITERAL;
 
 /* No Terminales */
-non terminal dialogo;
-non terminal sentencia;
-non terminal condicion;
-non terminal consecuencia;
-non terminal accion_simple;
+non terminal NodoArbol dialogo;
+non terminal NodoArbol sentencia;
+non terminal NodoArbol condicion;
+non terminal NodoArbol consecuencia;
+non terminal NodoArbol accion_simple;
 
 /* Símbolo inicial */
 start with dialogo;
 
 /* P1 y P2 */
-dialogo ::= sentencia
-          | sentencia SEMICOLON dialogo
+dialogo ::= sentencia:s
+            {: NodoArbol n = new NodoArbol("Dialogo");
+               n.agregarHijo(s);
+               parser.arbol = n;
+               RESULT = n; :}
+          | sentencia:s SEMICOLON dialogo:d
+            {: NodoArbol n = new NodoArbol("Dialogo");
+               n.agregarHijo(s);
+               n.agregarHijo(new NodoArbol("SEMICOLON", ";"));
+               n.agregarHijo(d);
+               parser.arbol = n;
+               RESULT = n; :}
           ;
 
 /* P3 y P4 y P5 */
-sentencia ::= SAY STRING_LITERAL
-            | GIVE STRING_LITERAL
-            | IF condicion THEN consecuencia ELSE consecuencia
+sentencia ::= SAY STRING_LITERAL:v
+              {: NodoArbol n = new NodoArbol("Sentencia");
+                 n.agregarHijo(new NodoArbol("SAY", "say"));
+                 n.agregarHijo(new NodoArbol("STRING_LITERAL", v));
+                 RESULT = n; :}
+            | GIVE STRING_LITERAL:v
+              {: NodoArbol n = new NodoArbol("Sentencia");
+                 n.agregarHijo(new NodoArbol("GIVE", "give"));
+                 n.agregarHijo(new NodoArbol("STRING_LITERAL", v));
+                 RESULT = n; :}
+            | IF condicion:c THEN consecuencia:t ELSE consecuencia:e
+              {: NodoArbol n = new NodoArbol("Sentencia");
+                 n.agregarHijo(new NodoArbol("IF", "if"));
+                 n.agregarHijo(c);
+                 n.agregarHijo(new NodoArbol("THEN", "then"));
+                 n.agregarHijo(t);
+                 n.agregarHijo(new NodoArbol("ELSE", "else"));
+                 n.agregarHijo(e);
+                 RESULT = n; :}
             ;
 
 /* P6 */
-condicion ::= PLAYER_HAS STRING_LITERAL
+condicion ::= PLAYER_HAS STRING_LITERAL:v
+              {: NodoArbol n = new NodoArbol("Condicion");
+                 n.agregarHijo(new NodoArbol("PLAYER_HAS", "player_has"));
+                 n.agregarHijo(new NodoArbol("STRING_LITERAL", v));
+                 RESULT = n; :}
             ;
 
-/* accion_simple: solo SAY o GIVE, sin IF anidado */
-accion_simple ::= SAY STRING_LITERAL
-                | GIVE STRING_LITERAL
+/* accion simple */
+accion_simple ::= SAY STRING_LITERAL:v
+                  {: NodoArbol n = new NodoArbol("AccionSimple");
+                     n.agregarHijo(new NodoArbol("SAY", "say"));
+                     n.agregarHijo(new NodoArbol("STRING_LITERAL", v));
+                     RESULT = n; :}
+                | GIVE STRING_LITERAL:v
+                  {: NodoArbol n = new NodoArbol("AccionSimple");
+                     n.agregarHijo(new NodoArbol("GIVE", "give"));
+                     n.agregarHijo(new NodoArbol("STRING_LITERAL", v));
+                     RESULT = n; :}
                 ;
 
 /* P7 y P8 */
-consecuencia ::= accion_simple
-               | consecuencia AND accion_simple
+consecuencia ::= accion_simple:a
+                 {: NodoArbol n = new NodoArbol("Consecuencia");
+                    n.agregarHijo(a);
+                    RESULT = n; :}
+               | consecuencia:c AND accion_simple:a
+                 {: NodoArbol n = new NodoArbol("Consecuencia");
+                    n.agregarHijo(c);
+                    n.agregarHijo(new NodoArbol("AND", "and"));
+                    n.agregarHijo(a);
+                    RESULT = n; :}
                ;
