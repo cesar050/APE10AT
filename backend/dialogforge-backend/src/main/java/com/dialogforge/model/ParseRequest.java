@@ -5,7 +5,7 @@ package com.dialogforge.model;
  * Contiene el script de diálogo RPG que será analizado
  * léxica y sintácticamente.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 public class ParseRequest {

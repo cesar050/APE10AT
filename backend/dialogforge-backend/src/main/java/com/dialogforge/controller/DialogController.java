@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * Permite peticiones desde cualquier origen (CORS habilitado)
  * para la integración con el frontend Vue.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 @RestController

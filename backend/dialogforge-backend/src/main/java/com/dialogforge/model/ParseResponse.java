@@ -6,7 +6,7 @@ package com.dialogforge.model;
  * Indica si el script es válido sintácticamente
  * y retorna un mensaje descriptivo del resultado.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 public class ParseResponse {

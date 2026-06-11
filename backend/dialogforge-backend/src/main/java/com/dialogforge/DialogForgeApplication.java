@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Motor de análisis léxico y sintáctico para guiones
  * de diálogo de personajes no jugables (NPC) en videojuegos RPG.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 @SpringBootApplication
