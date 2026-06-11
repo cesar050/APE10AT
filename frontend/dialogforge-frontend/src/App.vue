@@ -63,9 +63,7 @@ export default {
         })
         this.respuesta = res.data
         this.analizado = true
-        if (res.data.valido) {
-          this.extraerTokens()
-        }
+        this.extraerTokens()
       } catch (e) {
         this.respuesta = { valido: false, mensaje: 'Error al conectar con el servidor', arbol: null }
         this.analizado = true

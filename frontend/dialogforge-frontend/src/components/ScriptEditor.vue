@@ -1,6 +1,13 @@
 <template>
   <section class="panel panel-editor">
     <div class="panel-title">Script de Dialogo</div>
+    <div class="test-cases">
+      <button class="btn btn-test" @click="cargarCaso(0)" title="SAY &quot;Hola&quot;;">SAY simple</button>
+      <button class="btn btn-test" @click="cargarCaso(1)">IF-THEN-ELSE</button>
+      <button class="btn btn-test" @click="cargarCaso(2)">Acciones AND</button>
+      <button class="btn btn-test" @click="cargarCaso(3)">Múltiple</button>
+      <button class="btn btn-test" @click="cargarCaso(4)">Error sintáctico</button>
+    </div>
     <textarea
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
@@ -24,7 +31,23 @@ export default {
     modelValue: { type: String, default: '' },
     cargando: { type: Boolean, default: false }
   },
-  emits: ['update:modelValue', 'analizar', 'limpiar']
+  emits: ['update:modelValue', 'analizar', 'limpiar'],
+  data() {
+    return {
+      casos: [
+        'SAY "Hola"',
+        'IF PLAYER_HAS "Espada" THEN SAY "ok" ELSE GIVE "Espada"',
+        'IF PLAYER_HAS "Llave" THEN SAY "entra" ELSE GIVE "Llave" AND SAY "Toma"',
+        'SAY "Bienvenido"; IF PLAYER_HAS "Espada" THEN SAY "Ve" ELSE GIVE "Espada" AND SAY "Toma esto"',
+        'SAY "Hola" "Extra"'
+      ]
+    }
+  },
+  methods: {
+    cargarCaso(idx) {
+      this.$emit('update:modelValue', this.casos[idx])
+    }
+  }
 }
 </script>
 
@@ -60,6 +83,27 @@ export default {
   min-height: 0;
 }
 .editor:focus { border-color: #3b82f6; }
+.test-cases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.btn-test {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+  background: #0f1117;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-test:hover {
+  background: #1e293b;
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
 .editor-actions {
   display: flex;
   gap: 8px;

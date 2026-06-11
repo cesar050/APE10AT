@@ -14,7 +14,7 @@ import java.io.StringReader;
  * de diálogo RPG utilizando DialogLexer (JFlex) y DialogParser (CUP).
  * Retorna el resultado del análisis junto con el árbol de derivación.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 @Service
@@ -36,7 +36,14 @@ public class DialogParserService {
             parser.parse();
             return new ParseResponse(true, "Script válido. El diálogo RPG es sintácticamente correcto.", parser.arbol);
         } catch (RuntimeException e) {
-            return new ParseResponse(false, "Error sintáctico: " + e.getMessage());
+            String msg = e.getMessage();
+            String script = request.getScript().trim();
+            if (msg.contains("Syntax error")) {
+                if (script.endsWith(";")) {
+                    msg += ". El punto y coma (;) solo se usa como separador entre sentencias, no como terminador al final";
+                }
+            }
+            return new ParseResponse(false, "Error sintáctico: " + msg);
         } catch (Exception e) {
             return new ParseResponse(false, "Error inesperado: " + e.getMessage());
         }

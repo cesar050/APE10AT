@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Pruebas básicas de la aplicación DialogForge.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 class AppTest {

@@ -7,7 +7,7 @@ import java.util.List;
  * Representa un nodo del árbol de derivación de la gramática DialogForge.
  * Cada nodo tiene un tipo, un valor opcional y una lista de hijos.
  *
- * @author Cesar Ramos
+ * @authors Cesar Ramos, Cesar Lopez, Leonardo Espinoza
  * @version 1.0
  */
 public class NodoArbol {
