@@ -35,10 +35,10 @@ export default {
   data() {
     return {
       casos: [
-        'SAY "Hola"',
-        'IF PLAYER_HAS "Espada" THEN SAY "ok" ELSE GIVE "Espada"',
-        'IF PLAYER_HAS "Llave" THEN SAY "entra" ELSE GIVE "Llave" AND SAY "Toma"',
-        'SAY "Bienvenido"; IF PLAYER_HAS "Espada" THEN SAY "Ve" ELSE GIVE "Espada" AND SAY "Toma esto"',
+        'SAY "Hola";',
+        'IF PLAYER_HAS "Espada" THEN SAY "ok" ELSE GIVE "Espada";',
+        'IF PLAYER_HAS "Llave" THEN SAY "entra" ELSE GIVE "Llave" AND SAY "Toma";',
+        'SAY "Bienvenido"; IF PLAYER_HAS "Espada" THEN SAY "Ve" ELSE GIVE "Espada" AND SAY "Toma esto";',
         'SAY "Hola" "Extra"'
       ]
     }

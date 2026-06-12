@@ -36,14 +36,7 @@ public class DialogParserService {
             parser.parse();
             return new ParseResponse(true, "Script válido. El diálogo RPG es sintácticamente correcto.", parser.arbol);
         } catch (RuntimeException e) {
-            String msg = e.getMessage();
-            String script = request.getScript().trim();
-            if (msg.contains("Syntax error")) {
-                if (script.endsWith(";")) {
-                    msg += ". El punto y coma (;) solo se usa como separador entre sentencias, no como terminador al final";
-                }
-            }
-            return new ParseResponse(false, "Error sintáctico: " + msg);
+            return new ParseResponse(false, "Error sintáctico: " + e.getMessage());
         } catch (Exception e) {
             return new ParseResponse(false, "Error inesperado: " + e.getMessage());
         }

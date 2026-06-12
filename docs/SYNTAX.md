@@ -6,20 +6,21 @@ Lenguaje de guiones para diálogos de PNJ (Personajes No Jugables) en videojuego
 
 ## 1. Estructura general
 
-Un script de diálogo es una **secuencia de una o más sentencias** separadas por `;`.
+Un script de diálogo es una **secuencia de una o más sentencias** donde cada sentencia termina obligatoriamente con `;`.
 
 ```
-sentencia
-sentencia ; sentencia
-sentencia ; sentencia ; sentencia
+sentencia ;
+sentencia ; sentencia ;
+sentencia ; sentencia ; sentencia ;
 ```
 
-**No existe `;` al final de la última sentencia.**
+**Toda sentencia debe terminar con `;`.**
 
 ```
-SAY "Hola"                  ← correcto
-SAY "Hola";                 ← incorrecto (; al final sin otra sentencia)
-SAY "Hola"; SAY "adiós"     ← correcto
+SAY "Hola";                  ← correcto
+SAY "Hola"                   ← incorrecto (falta ;)
+SAY "Hola"; SAY "adiós";     ← correcto
+SAY "Hola"; SAY "adiós"      ← incorrecto (la segunda sentencia no tiene ;)
 ```
 
 ---
@@ -28,8 +29,8 @@ SAY "Hola"; SAY "adiós"     ← correcto
 **Qué hace:** El PNJ dice un mensaje al jugador.
 
 ```
-SAY "Bienvenido a la aventura"
-SAY "Cuidado con los goblins"
+SAY "Bienvenido a la aventura";
+SAY "Cuidado con los goblins";
 ```
 
 | Parte | Significado |
@@ -43,9 +44,9 @@ SAY "Cuidado con los goblins"
 - Puede contener espacios, números, símbolos: `SAY "¡hola! 123"`
 
 **Usos típicos:**
-- Diálogo normal: `SAY "Ve al norte"`
-- Tutorial: `SAY "Presiona E para interactuar"`
-- Lore: `SAY "Este bosque fue un reino antiguo"`
+- Diálogo normal: `SAY "Ve al norte";`
+- Tutorial: `SAY "Presiona E para interactuar";`
+- Lore: `SAY "Este bosque fue un reino antiguo";`
 
 ---
 
@@ -53,8 +54,8 @@ SAY "Cuidado con los goblins"
 **Qué hace:** El PNJ entrega un objeto al inventario del jugador.
 
 ```
-GIVE "Espada de madera"
-GIVE "Poción de vida"
+GIVE "Espada de madera";
+GIVE "Poción de vida";
 ```
 
 | Parte | Significado |
@@ -63,9 +64,9 @@ GIVE "Poción de vida"
 | `"<item>"` | Nombre del objeto entre comillas |
 
 **Usos típicos:**
-- Recompensa: `GIVE "Llave del castillo"`
-- Objeto inicial: `GIVE "Mapa del bosque"`
-- Quest item: `GIVE "Carta del rey"`
+- Recompensa: `GIVE "Llave del castillo";`
+- Objeto inicial: `GIVE "Mapa del bosque";`
+- Quest item: `GIVE "Carta del rey";`
 
 ---
 
@@ -73,7 +74,7 @@ GIVE "Poción de vida"
 **Qué hace:** Pregunta si el jugador tiene un objeto en su inventario. Si lo tiene, ejecuta la consecuencia del THEN. Si no, ejecuta la del ELSE.
 
 ```
-IF PLAYER_HAS "Espada" THEN SAY "Buena espada" ELSE GIVE "Espada"
+IF PLAYER_HAS "Espada" THEN SAY "Buena espada" ELSE GIVE "Espada";
 ```
 
 | Parte | Significado |
@@ -85,10 +86,10 @@ IF PLAYER_HAS "Espada" THEN SAY "Buena espada" ELSE GIVE "Espada"
 | `ELSE` | Separador: lo que sigue es la consecuencia si es falso |
 | `<consecuencia>` | Acción(es) a ejecutar |
 
-**El `IF` completo es UNA sola sentencia. No se puede partir con `;`:**
+**El `IF` completo es UNA sola sentencia. No se puede partir con `;` en medio:**
 
 ```
-IF PLAYER_HAS "Llave" THEN SAY "abre" ELSE GIVE "Llave"
+IF PLAYER_HAS "Llave" THEN SAY "abre" ELSE GIVE "Llave";
 ```
 
 **Errores comunes:**
@@ -102,9 +103,9 @@ IF PLAYER_HAS "Llave" THEN SAY "abre" ELSE GIVE "Llave"
 | `IF PLAYER_HAS "X" THEN SAY "a" ELSE` | ELSE sin acción |
 
 **Usos típicos:**
-- Puerta cerrada: `IF PLAYER_HAS "Llave" THEN SAY "abriste" ELSE SAY "no tienes llave"`
-- NPC quest: `IF PLAYER_HAS "Carta" THEN SAY "gracias" ELSE GIVE "Carta"`
-- Tienda: `IF PLAYER_HAS "Oro" THEN GIVE "Poción" AND SAY "gracias" ELSE SAY "no tienes oro"`
+- Puerta cerrada: `IF PLAYER_HAS "Llave" THEN SAY "abriste" ELSE SAY "no tienes llave";`
+- NPC quest: `IF PLAYER_HAS "Carta" THEN SAY "gracias" ELSE GIVE "Carta";`
+- Tienda: `IF PLAYER_HAS "Oro" THEN GIVE "Poción" AND SAY "gracias" ELSE SAY "no tienes oro";`
 
 ---
 
@@ -135,33 +136,34 @@ ELSE accion_simple AND accion_simple
 
 ```
 IF PLAYER_HAS "Llave" THEN SAY "abres la puerta" AND GIVE "Experiencia"
-                      ELSE GIVE "Llave" AND SAY "toma la llave" AND SAY "vuelve pronto"
+                      ELSE GIVE "Llave" AND SAY "toma la llave" AND SAY "vuelve pronto";
 ```
 
 ---
 
-## 6. `;` (punto y coma): Separador de sentencias
+## 6. `;` (punto y coma): Delimitador obligatorio
 
-**Qué hace:** Separa una sentencia completa de la siguiente.
+**Qué hace:** Toda sentencia debe terminar con `;`. Marca el fin de una sentencia y permite iniciar la siguiente.
 
 ```
-sentencia_1 ; sentencia_2 ; sentencia_3
+sentencia_1 ; sentencia_2 ; sentencia_3 ;
 ```
+
+**Regla fundamental:** cada sentencia **empieza** con una palabra clave (`SAY`, `GIVE`, `IF`) y **termina** con `;`.
 
 | Uso | Válido |
 |---|---|
-| `SAY "a"; SAY "b"` | ✅ Separa dos sentencias |
-| `SAY "a"; SAY "b"; SAY "c"` | ✅ Tres sentencias |
-| `SAY "a";` | ❌ `;` al final sin otra sentencia |
-| `SAY "a";; SAY "b"` | ❌ Doble `;` |
-| `IF PLAYER_HAS "x"; THEN SAY "a"` | ❌ `;` dentro del IF |
-
-**Regla de oro:** el `;` equivale a "y luego", no a "fin de línea".
+| `SAY "a";` | ✅ Una sentencia |
+| `SAY "a"; SAY "b";` | ✅ Dos sentencias |
+| `SAY "a"; SAY "b"` | ❌ Falta `;` en la segunda |
+| `SAY "a"` | ❌ Falta `;` |
+| `SAY "a";;` | ❌ Doble `;` |
+| `SAY "a"; ; SAY "b";` | ❌ `;` solo sin sentencia |
+| `IF PLAYER_HAS "x"; THEN SAY "a";` | ❌ `;` dentro del IF |
 
 ```
-SAY "Hola" ; GIVE "Mapa" ; IF PLAYER_HAS "Espada" THEN SAY "lucha" ELSE GIVE "Espada"
-↑ sentencia 1   ↑ sentencia 2   ↑           sentencia 3 completa                  ↑
-                                                                   sin ; al final  ok
+SAY "Hola"; GIVE "Mapa"; IF PLAYER_HAS "Espada" THEN SAY "lucha" ELSE GIVE "Espada";
+↑ sentencia 1; ↑ sentencia 2; ↑              sentencia 3 completa              ;
 ```
 
 ---
@@ -193,37 +195,36 @@ El árbol de derivación es:
 
 ### Básico
 ```
-SAY "Hola forastero"
-GIVE "Pan"
+SAY "Hola forastero";
+GIVE "Pan";
 ```
 
 ### Tutorial
 ```
-SAY "Bienvenido al juego"; GIVE "Espada de madera"; SAY "Ve a la cueva del norte"
+SAY "Bienvenido al juego"; GIVE "Espada de madera"; SAY "Ve a la cueva del norte";
 ```
 
 ### Quest simple
 ```
-SAY "Necesito que recuperes mi anillo"
+SAY "Necesito que recuperes mi anillo";
 IF PLAYER_HAS "Anillo" THEN SAY "Gracias! Toma tu recompensa" AND GIVE "Oro"
-                        ELSE SAY "Vuelve cuando tengas mi anillo"
+                        ELSE SAY "Vuelve cuando tengas mi anillo";
 ```
 
 ### Mercader
 ```
-IF PLAYER_HAS "Oro" THEN GIVE "Poción" AND SAY "Buena elección" ELSE SAY "No tienes suficiente oro"
+IF PLAYER_HAS "Oro" THEN GIVE "Poción" AND SAY "Buena elección" ELSE SAY "No tienes suficiente oro";
 ```
 
 ### Puerta con llave
 ```
 IF PLAYER_HAS "Llave de plata" THEN SAY "La puerta se abre" AND GIVE "Experiencia" AND SAY "Has ganado XP"
-                               ELSE SAY "La puerta está cerrada con llave"
+                               ELSE SAY "La puerta está cerrada con llave";
 ```
 
 ### Secuencia completa (varias sentencias)
 ```
-SAY "Hola aventurero"; IF PLAYER_HAS "Mapa" THEN SAY "Ya tienes mapa" ELSE GIVE "Mapa" AND SAY "Toma un mapa";
-SAY "Ten cuidado allá afuera"
+SAY "Hola aventurero"; IF PLAYER_HAS "Mapa" THEN SAY "Ya tienes mapa" ELSE GIVE "Mapa" AND SAY "Toma un mapa"; SAY "Ten cuidado allá afuera";
 ```
 
 ---
@@ -232,10 +233,11 @@ SAY "Ten cuidado allá afuera"
 
 | Error | Causa | Solución |
 |---|---|---|
-| `SAY "hola";` | `;` al final | Quitar el `;` final |
+| `SAY "hola"` | Falta `;` al final | Agregar `;` al final: `SAY "hola";` |
 | `IF PLAYER_HAS "X" SAY "a"` | Falta `THEN` | Agregar `THEN` después de la condición |
 | `IF PLAYER_HAS "X" THEN SAY "a"` | Falta `ELSE` | Agregar `ELSE` y una consecuencia |
 | `IF PLAYER_HAS "X" THEN ELSE SAY "a"` | THEN vacío | Poner acción después de THEN |
 | `SAY "hola" AND GIVE "x"` | AND fuera de IF | AND solo dentro de THEN/ELSE |
-| `SAY "hola" "adiós"` | Dos textos seguidos | Una sentencia por vez, separar con `;` |
+| `SAY "hola" "adiós"` | Dos textos seguidos | Una sentencia por vez: `SAY "hola"; SAY "adiós";` |
 | `IF PLAYER_HAS X` | Falta `"..."` | Las comillas son obligatorias: `"X"` |
+| `SAY "a";; SAY "b";` | Doble `;` | Un solo `;` por sentencia |

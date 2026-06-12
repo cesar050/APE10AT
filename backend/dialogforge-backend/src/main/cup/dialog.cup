@@ -35,10 +35,11 @@ non terminal NodoArbol accion_simple;
 /* Símbolo inicial */
 start with dialogo;
 
-/* P1 y P2 */
-dialogo ::= sentencia:s
+/* P1 y P2: ; es delimitador obligatorio */
+dialogo ::= sentencia:s SEMICOLON
             {: NodoArbol n = new NodoArbol("Dialogo");
                n.agregarHijo(s);
+               n.agregarHijo(new NodoArbol("SEMICOLON", ";"));
                parser.arbol = n;
                RESULT = n; :}
           | sentencia:s SEMICOLON dialogo:d
