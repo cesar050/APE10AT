@@ -35,7 +35,7 @@ public class DialogLexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_CMAP_TOP = zzUnpackcmap_top();
 
   private static final String ZZ_CMAP_TOP_PACKED_0 =
-    "\1\0\u10ff\u0100";
+    "\1\0\1\u0100\u10fe\u0200";
 
   private static int [] zzUnpackcmap_top() {
     int [] result = new int[4352];
@@ -67,10 +67,14 @@ public class DialogLexer implements java_cup.runtime.Scanner {
     "\1\0\1\4\30\0\1\5\5\0\1\6\2\0\1\7"+
     "\1\10\1\11\1\12\1\13\1\14\2\0\1\15\1\0"+
     "\1\16\1\0\1\17\1\0\1\20\1\21\1\22\1\0"+
-    "\1\23\2\0\1\24\5\0\1\25\u01a0\0";
+    "\1\23\2\0\1\24\5\0\1\25\1\0\1\6\2\0"+
+    "\1\7\1\10\1\11\1\12\1\13\1\14\2\0\1\15"+
+    "\1\0\1\16\1\0\1\17\1\0\1\20\1\21\1\22"+
+    "\1\0\1\23\2\0\1\24\266\0\2\14\115\0\1\21"+
+    "\u0180\0";
 
   private static int [] zzUnpackcmap_blocks() {
-    int [] result = new int[512];
+    int [] result = new int[768];
     int offset = 0;
     offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
     return result;

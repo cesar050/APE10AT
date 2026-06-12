@@ -8,7 +8,6 @@ import java_cup.runtime.Symbol;
 %unicode
 %cupsym DialogSymbols
 %cup
-%ignorecase
 %public
 %line
 %column
