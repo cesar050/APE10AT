@@ -8,6 +8,23 @@
       <button class="btn btn-test" @click="cargarCaso(3)">Múltiple</button>
       <button class="btn btn-test" @click="cargarCaso(4)">Error sintáctico</button>
     </div>
+    <button class="btn-toggle" @click="showTokens = !showTokens">
+      {{ showTokens ? '▾' : '▸' }} Tokens permitidos
+    </button>
+    <div v-if="showTokens" class="token-ref">
+      <table class="token-table">
+        <tr><th>Token</th><th>Descripción</th><th>Ejemplo</th></tr>
+        <tr><td class="tok">SAY</td><td>PNJ dice un mensaje</td><td><code>SAY "Hola";</code></td></tr>
+        <tr><td class="tok">GIVE</td><td>Otorga un objeto al jugador</td><td><code>GIVE "Espada";</code></td></tr>
+        <tr><td class="tok">IF</td><td>Inicia una condición</td><td><code>IF PLAYER_HAS ...</code></td></tr>
+        <tr><td class="tok">THEN</td><td>Acción si la condición es verdadera</td><td><code>THEN SAY "ok";</code></td></tr>
+        <tr><td class="tok">ELSE</td><td>Acción si la condición es falsa</td><td><code>ELSE GIVE "x";</code></td></tr>
+        <tr><td class="tok">PLAYER_HAS</td><td>Verifica si el jugador posee un objeto</td><td><code>PLAYER_HAS "Llave"</code></td></tr>
+        <tr><td class="tok">AND</td><td>Concatena acciones en THEN/ELSE</td><td><code>ELSE GIVE "x" AND SAY "y";</code></td></tr>
+        <tr><td class="tok">;</td><td>Delimitador obligatorio de sentencia</td><td><code>SAY "a";</code></td></tr>
+        <tr><td class="tok">STRING</td><td>Texto entre comillas dobles</td><td><code>"Hola mundo"</code></td></tr>
+      </table>
+    </div>
     <textarea
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
@@ -34,6 +51,7 @@ export default {
   emits: ['update:modelValue', 'analizar', 'limpiar'],
   data() {
     return {
+      showTokens: false,
       casos: [
         'SAY "Hola";',
         'IF PLAYER_HAS "Espada" THEN SAY "ok" ELSE GIVE "Espada";',
@@ -83,6 +101,54 @@ export default {
   min-height: 0;
 }
 .editor:focus { border-color: #3b82f6; }
+.btn-toggle {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 2px 0;
+  font-weight: 500;
+}
+.btn-toggle:hover { color: #3b82f6; }
+.token-ref {
+  background: #0f1117;
+  border: 1px solid #2d3748;
+  border-radius: 6px;
+  padding: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.token-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+.token-table th {
+  text-align: left;
+  color: #64748b;
+  font-weight: 600;
+  padding: 4px 6px;
+  border-bottom: 1px solid #2d3748;
+}
+.token-table td {
+  padding: 4px 6px;
+  color: #cbd5e1;
+  border-bottom: 1px solid #1e293b;
+}
+.token-table tr:last-child td { border-bottom: none; }
+.tok {
+  color: #3b82f6;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.token-table code {
+  color: #94a3b8;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+}
 .test-cases {
   display: flex;
   flex-wrap: wrap;

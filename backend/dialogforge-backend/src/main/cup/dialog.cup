@@ -81,7 +81,7 @@ condicion ::= PLAYER_HAS STRING_LITERAL:v
                  RESULT = n; :}
             ;
 
-/* accion simple */
+/* P9 y P10 */
 accion_simple ::= SAY STRING_LITERAL:v
                   {: NodoArbol n = new NodoArbol("AccionSimple");
                      n.agregarHijo(new NodoArbol("SAY", "say"));
